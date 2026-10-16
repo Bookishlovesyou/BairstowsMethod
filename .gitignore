@@ -1,0 +1,9 @@
+# Compiled programs
+*.exe
+*.out
+
+# Generated build output
+/output/
+
+# Temporary files created by editor runners
+/tempCodeRunnerFile.c
