@@ -7,10 +7,10 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\main.c",
-                "${workspaceFolder}\\polynomial.c",
+                "${workspaceFolder}\\src\\main.c",
+                "${workspaceFolder}\\src\\polynomial.c",
                 "-o",
-                "${workspaceFolder}\\main.exe",
+                "${workspaceFolder}\\src\\main.exe",
                 "-lm"
             ],
             "options": {
