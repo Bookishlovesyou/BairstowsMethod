@@ -2,8 +2,11 @@ Bairstow Method - Test Cases
 ============================
 
 Run the program and enter each test case's inputs one value per line. For
-successful cases, the program also prints a Bairstow iteration table; the
-expected output below shows the final Roots section.
+successful cases, the program reports the total number of Bairstow
+iteration tables and displays the first, middle, and last tables. It then
+prints all roots and verifies the polynomial reconstructed from them against
+the input coefficients. The expected output below shows the Roots section;
+successful runs should also report "Reconstruction verification: PASS".
 
 Test 1: Quadratic with two real roots
 -------------------------------------
@@ -111,5 +114,4 @@ Input:
 Expected error:
 Tolerance must be a positive number.
 Expected result: program exits with failure.
-
 

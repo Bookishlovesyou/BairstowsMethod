@@ -45,6 +45,8 @@ int main(void) {
         return EXIT_FAILURE;
     }
     print_roots(roots, count);
+    int verified =
+        verify_reconstruction(coefficients, degree, roots, count, tolerance);
     free(coefficients); free(roots);
-    return EXIT_SUCCESS;
+    return verified ? EXIT_SUCCESS : EXIT_FAILURE;
 }
