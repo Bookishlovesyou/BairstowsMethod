@@ -9,5 +9,7 @@ typedef struct {
 int solve_polynomial(const double *coefficients, int degree, double tolerance,
                      Root *roots);
 void print_roots(const Root *roots, int count);
+int verify_reconstruction(const double *coefficients, int degree,
+                          const Root *roots, int count, double tolerance);
 
 #endif
