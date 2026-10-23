@@ -71,12 +71,15 @@ static void print_table(const IterationTable *table, size_t number,
                         const char *position) {
     printf("\n%s Bairstow iteration table %zu (degree %d, start %d)\n",
            position, number, table->degree, table->start);
+    printf("+-----------+----------------+----------------+--------------------+--------------------+\n");
+    printf("| Iteration |       r        |       s        |    Remainder (r)   |    Remainder (s)   |\n");
+    printf("+-----------+----------------+----------------+--------------------+--------------------+\n");
     for (size_t i = 0; i < table->row_count; ++i) {
         const IterationRow *row = &table->rows[i];
-        printf("%4d  r=% .10g  s=% .10g  remainder=(% .3e, % .3e)\n",
-               row->iteration, row->r, row->s, row->remainder_r,
-               row->remainder_s);
+        printf("| %9d | %14.7g | %14.7g | %18.3e | %18.3e |\n",
+               row->iteration, row->r, row->s, row->remainder_r, row->remainder_s);
     }
+    printf("+-----------+----------------+----------------+--------------------+--------------------+\n");
 }
 
 static void remainders(const double *a, int degree, double r, double s,
@@ -251,13 +254,20 @@ int solve_polynomial(const double *coefficients, int degree, double tolerance,
 
 void print_roots(const Root *roots, int count) {
     puts("\nRoots:");
+    printf("+------+------------------------------+\n");
+    printf("| Root | Value                        |\n");
+    printf("+------+------------------------------+\n");
     for (int i = 0; i < count; ++i) {
         if (fabs(roots[i].imag) < 1e-12)
-            printf("x%d = %.10g\n", i + 1, roots[i].real);
-        else
-            printf("x%d = %.10g %c %.10gi\n", i + 1, roots[i].real,
-                   roots[i].imag < 0 ? '-' : '+', fabs(roots[i].imag));
+            printf("| x%-3d | %-28.10g |\n", i + 1, roots[i].real);
+        else {
+            char value[64];
+            snprintf(value, sizeof(value), "% .8g %c %.8gi", roots[i].real,
+                     roots[i].imag < 0 ? '-' : '+', fabs(roots[i].imag));
+            printf("| x%-3d | %-28s |\n", i + 1, value);
+        }
     }
+    printf("+------+------------------------------+\n");
 }
 
 int verify_reconstruction(const double *coefficients, int degree,
@@ -294,13 +304,23 @@ int verify_reconstruction(const double *coefficients, int degree,
         if (fabs(coefficients[i]) > scale) scale = fabs(coefficients[i]);
     double max_error = 0.0;
     printf("\nPolynomial reconstructed from roots:\n");
+    printf("+---------+---------------------------------+----------------------+----------------+\n");
+    printf("| %-7s | %-31s | %-20s | %-14s |\n",
+           "Power", "Reconstructed coefficient", "Input coefficient", "Error");
+    printf("+---------+---------------------------------+----------------------+----------------+\n");
     for (int i = 0; i <= degree; ++i) {
         double error = hypot(current[i].real - coefficients[i], current[i].imag);
         if (error > max_error) max_error = error;
-        printf("x^%d: reconstructed=% .10g %+.3ei, input=% .10g, error=%.3e\n",
-               degree - i, current[i].real, current[i].imag,
-               coefficients[i], error);
+        char reconstructed[64], input[32], error_text[32], power[16];
+        snprintf(power, sizeof(power), "x^%d", degree - i);
+        snprintf(reconstructed, sizeof(reconstructed), "% .10g %+.3ei",
+                 current[i].real, current[i].imag);
+        snprintf(input, sizeof(input), "% .10g", coefficients[i]);
+        snprintf(error_text, sizeof(error_text), "%.3e", error);
+        printf("| %-7s | %-31s | %-20s | %-14s |\n",
+               power, reconstructed, input, error_text);
     }
+    printf("+---------+---------------------------------+----------------------+----------------+\n");
     int verified = max_error <= tolerance * scale;
     printf("Maximum coefficient error: %.3e\n", max_error);
     printf("Reconstruction verification: %s\n", verified ? "PASS" : "FAIL");
